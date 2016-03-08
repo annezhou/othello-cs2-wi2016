@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <stdio.h>
 #include <vector>
+#include <time.h>
 #include "common.h"
 #include "board.h"
 using namespace std;

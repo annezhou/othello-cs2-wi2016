@@ -10,6 +10,7 @@ Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
     testingMinimax = false;
     board = new Board();
+
     side = side;
     
     // set up weighted board
@@ -98,6 +99,7 @@ vector<Move> Player::get_possible_moves(Side side)
  */
 Move *Player::choose_random_move(vector<Move> moves)
 {
+    srand(time(NULL));
     int len = moves.size();
     int move_index = rand() % len;
     Move *move = &moves[move_index];
