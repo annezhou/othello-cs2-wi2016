@@ -10,6 +10,7 @@ Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
     testingMinimax = false;
     board = new Board();
+
     side = side;
     
     // set up weighted board
@@ -46,8 +47,8 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * process the opponent's opponents move before calculating your own move
      */
 
-    vector<Move> *moves = new vector<Move>;
-    Move *final_move = new Move(0, 0);
+    vector<Move> *moves;// = new vector<Move>;
+    Move *final_move;// = new Move(0, 0);
 
     /**
      * Process opponent's move.
@@ -64,6 +65,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         moves = get_possible_moves(side);
         final_move = choose_random_move(moves);
         board->doMove(final_move, side);
+        delete moves;
         return final_move;
     }
     return NULL;
