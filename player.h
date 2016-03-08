@@ -22,10 +22,13 @@ public:
     Side side;
     
     Move *doMove(Move *opponentsMove, int msLeft);
-    vector<Move> get_possible_moves();
+    vector<Move> get_possible_moves(Side given_side, Board *given_board);
     Move *choose_random_move(vector<Move> moves);
 
     Move *choose_weighted_move(vector<Move> moves);
+    int simulate_move(Board *given_board, Move move, Side move_side, Side score_side);
+
+    Move *choose_minimax_move(vector<Move> moves);
 
     int weights[8][8];
 

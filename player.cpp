@@ -12,18 +12,19 @@ Player::Player(Side side) {
     board = new Board();
 
     this->side = side;
-    cerr<<(side==BLACK)<<endl;
+    cerr << (this->side == BLACK) << endl;
 
     /* initialize weights for board */
-    int temp[8][8] = 
-    {{20, -5, 2, 2, 2, 2, -5, 20},
-     {-5, -10, 1, 1, 1, 1, -10, -5},
-     {2, 1, 2, 2, 2, 2, 1, 2},
-     {2, 1, 2, 0, 0, 2, 1, 2},
-     {2, 1, 2, 0, 0, 2, 1, 2},
-     {2, 1, 2, 2, 2, 2, 1, 2},
-     {-5, -10, 1, 1, 1, 1, -10, -5},
-     {20, -5, 2, 2, 2, 2, -5, 20}};
+
+    int temp[8][8] =
+            {{20, -5, 2, 2, 2, 2, -5, 20},
+             {-5, -10, 1, 1, 1, 1, -10, -5},
+             {2, 1, 2, 2, 2, 2, 1, 2},
+             {2, 1, 2, 0, 0, 2, 1, 2},
+             {2, 1, 2, 0, 0, 2, 1, 2},
+             {2, 1, 2, 2, 2, 2, 1, 2},
+             {-5, -10, 1, 1, 1, 1, -10, -5},
+             {20, -5, 2, 2, 2, 2, -5, 20}};
     memcpy(&weights, &temp, 64 * sizeof(int));
     /* 
      * Do any initialization you need to do here (setting up the board,
@@ -85,8 +86,8 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     
     if (board->hasMoves(side))
     {
-        moves = get_possible_moves();
-        final_move = choose_weighted_move(moves);
+        moves = get_possible_moves(this->side, this->board);
+        final_move = choose_minimax_move(moves);
         board->doMove(final_move, this->side);
         return final_move;
     }
@@ -96,7 +97,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 /**
  * @brief Finds a vector of all possible moves for the side specified.
  */
-vector<Move> Player::get_possible_moves()
+vector<Move> Player::get_possible_moves(Side given_side, Board *given_board)
 {
     vector<Move> moves;
 
@@ -105,7 +106,7 @@ vector<Move> Player::get_possible_moves()
         for (int j = 0; j < 8; j++)
         {
             Move to_test(i, j);
-            if (board->checkMove(&to_test, this->side))
+            if (given_board->checkMove(&to_test, given_side))
             {
                 moves.push_back(to_test);
             }
@@ -138,9 +139,7 @@ Move *Player::choose_weighted_move(vector<Move> moves)
     /* score all possible moves */
     for(unsigned int i = 0; i < moves.size(); i++) {
         /* copy board and make move */
-        Board * copy = board->copy();
-        copy->doMove(&moves[i], this->side);
-        score = copy->score(this->side, this->weights);
+        score = simulate_move(this->board, moves[i], this->side, this->side);
 
         /* initialize max score as first move */
         if(i == 0){
@@ -152,8 +151,66 @@ Move *Player::choose_weighted_move(vector<Move> moves)
                 max_move = moves[i];
             }
         }
-        delete copy; 
     }
     return new Move(max_move.getX(), max_move.getY());
 }
 
+/**
+ * @brief Chooses a weighted move based on a minimax decision tree.
+ */
+
+Move *Player::choose_minimax_move(vector<Move> moves)
+{
+    Move minimax_move = moves[0];
+    vector<Move> other_side_moves;
+    Side other = (this->side == BLACK) ? WHITE : BLACK;
+    int score, min_score_overall, min_score, first_move_score;
+    /* score all possible moves */
+    for(unsigned int i = 0; i < moves.size(); i++)
+    {
+        /* copy board and make move */
+        first_move_score = simulate_move(this->board, moves[i], this->side, this->side);
+        Board *copy = board->copy();
+        other_side_moves = get_possible_moves(other, copy);
+
+        for (unsigned int j = 0; j < other_side_moves.size(); j++)
+        {
+            score = simulate_move(copy, other_side_moves[i], other, this->side) - first_move_score;
+            if (j == 0)
+            {
+                min_score = score;
+                if (i == 0)
+                {
+                    min_score_overall = score;
+                }
+            }
+            else
+            {
+                if (score < min_score)
+                {
+                    min_score = score;
+                }
+            }
+        }
+
+        if (min_score > min_score_overall)
+        {
+            min_score_overall = min_score;
+            minimax_move = moves[i];
+        }
+
+    }
+    return new Move(minimax_move.getX(), minimax_move.getY());
+}
+
+/**
+ * @brief Scores a hypothetical move without executing it.
+ */
+int Player::simulate_move(Board *given_board, Move move, Side move_side, Side score_side)
+{
+    Board *copy = given_board->copy();
+    copy->doMove(&move, move_side);
+    int score = copy->score(score_side, this->weights);
+    delete copy;
+    return score;
+}
