@@ -64,6 +64,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     {
         moves = get_possible_moves(side);
         final_move = choose_random_move(moves);
+        cerr << side << final_move->getX() << ", " << final_move->getY() << endl;
         board->doMove(final_move, side);
         return final_move;
     }
@@ -77,14 +78,16 @@ vector<Move> Player::get_possible_moves(Side side)
 {
     vector<Move> moves;
 
+    Side other = (side == BLACK) ? WHITE : BLACK;
+
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
         {
             Move to_test(i, j);
-            if (board->checkMove(&to_test, side))
+            if (board->checkMove(&to_test, other))
             {
-                cerr << board->checkMove(&to_test, side) << endl;
+                cerr << board->checkMove(&to_test, other) << endl;
                 cerr << side << to_test.getX() << ", " << to_test.getY() << endl;
                 moves.push_back(to_test);
             }
