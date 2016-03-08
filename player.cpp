@@ -83,6 +83,7 @@ vector<Move> Player::get_possible_moves(Side side)
             Move to_test(i, j);
             if (board->checkMove(&to_test, side))
             {
+                cerr << board->checkMove(&to_test, side) << endl;
                 cerr << side << to_test.getX() << ", " << to_test.getY() << endl;
                 moves.push_back(to_test);
             }
