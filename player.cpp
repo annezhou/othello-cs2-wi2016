@@ -1,4 +1,5 @@
 #include "player.h"
+using namespace std;
 
 /*
  * Constructor for the player; initialize everything here. The side your AI is
@@ -9,6 +10,7 @@ Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
     testingMinimax = false;
     board = new Board();
+    side = side;
     
     // set up weighted board
 
@@ -42,6 +44,56 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     /* 
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
-     */ 
+     */
+
+    vector<Move> *moves;
+
+    /**
+     * Process opponent's move.
+     */
+
+    Side other = (side == BLACK) ? WHITE : BLACK;
+    board->doMove(opponentsMove, other);
+
+    if (board->hasMoves(side))
+    {
+        moves = get_possible_moves(side);
+        Move final_move = choose_random_move(moves);
+        board->doMove(&final_move, side);
+        return &final_move;
+    }
     return NULL;
 }
+
+/**
+ * @brief Finds a vector of all possible moves for the side specified.
+ */
+vector<Move> *Player::get_possible_moves(Side side)
+{
+    vector<Move> *moves;
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            Move to_test = Move(i, j);
+            if (board->checkMove(&to_test, side))
+            {
+                moves->push_back(to_test);
+            }
+        }
+    }
+
+    return moves;
+}
+
+/**
+ * @brief Chooses a random move from a vector of moves.
+ */
+Move Player::choose_random_move(vector<Move> *moves)
+{
+    int len = moves->size();
+    int move_index = rand() % len;
+    Move move = moves->at(move_index);
+    return move;
+}
+
