@@ -105,7 +105,9 @@ Move *Player::choose_random_move(vector<Move> moves)
     srand(time(NULL));
     int len = moves.size();
     int move_index = rand() % len;
-    Move *move = &moves[move_index];
+    Move temp = moves[move_index];
+    Move *move = new Move(temp.getX(), temp.getY());
+    cerr<<move->getX()<<" "<<move->getY()<<endl;
     return move;
 }
 
