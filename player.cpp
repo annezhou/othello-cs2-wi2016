@@ -11,7 +11,7 @@ Player::Player(Side side) {
     testingMinimax = false;
     board = new Board();
 
-    side = side;
+    this->side = side;
     
     // set up weighted board
 
@@ -60,11 +60,13 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     /**
      * Make a move.
      */
+
+    cerr<<"Has moves "<<board->hasMoves(side)<<endl;
     if (board->hasMoves(side))
     {
-        moves = get_possible_moves(side);
+        moves = get_possible_moves();
         final_move = choose_random_move(moves);
-        cerr << side << final_move->getX() << ", " << final_move->getY() << endl;
+        cerr << side<<"move"<< final_move->getX() << ", " << final_move->getY() << endl;
         board->doMove(final_move, side);
         return final_move;
     }
@@ -74,21 +76,17 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 /**
  * @brief Finds a vector of all possible moves for the side specified.
  */
-vector<Move> Player::get_possible_moves(Side side)
+vector<Move> Player::get_possible_moves()
 {
     vector<Move> moves;
-
-    Side other = (side == BLACK) ? WHITE : BLACK;
-
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
         {
             Move to_test(i, j);
-            if (board->checkMove(&to_test, other))
+            if (board->checkMove(&to_test, side))
             {
-                cerr << board->checkMove(&to_test, other) << endl;
-                cerr << side << to_test.getX() << ", " << to_test.getY() << endl;
+                cerr << side <<" "<< to_test.getX() << ", " << to_test.getY() << endl;
                 moves.push_back(to_test);
             }
         }

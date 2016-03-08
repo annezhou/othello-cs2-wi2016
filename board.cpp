@@ -1,5 +1,4 @@
 #include "board.h"
-#include "player.h"
 
 /*
  * Make a standard 8x8 othello board and initialize it to the standard setup.
@@ -79,11 +78,7 @@ bool Board::checkMove(Move *m, Side side) {
     int Y = m->getY();
 
     // Make sure the square hasn't already been taken.
-
-    if (occupied(X, Y))
-    {
-        return false;
-    }
+    if (occupied(X, Y)) return false;
 
     Side other = (side == BLACK) ? WHITE : BLACK;
     for (int dx = -1; dx <= 1; dx++) {
@@ -183,3 +178,4 @@ void Board::setBoard(char data[]) {
         }
     }
 }
+
