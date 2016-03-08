@@ -60,12 +60,16 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     /**
      * Make a move.
      */
+
+    cerr<<"Has moves "<<board->hasMoves(side)<<endl;
     if (board->hasMoves(side))
     {
         moves = get_possible_moves();
         final_move = choose_random_move(moves);
+
         cerr << side << final_move->getX() << ", " << final_move->getY() << endl;
         board->doMove(final_move, this->side);
+
         return final_move;
     }
     return NULL;
