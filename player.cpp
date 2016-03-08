@@ -26,7 +26,7 @@ Player::Player(Side side) {
  * Destructor for the player.
  */
 Player::~Player() {
-    delete board;
+    //delete board;
 }
 
 /*
@@ -46,27 +46,24 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
-
     vector<Move> moves;
     Move *final_move;
 
     /**
      * Process opponent's move.
      */
-    Side other = (side == BLACK) ? WHITE : BLACK;
+    Side other = (this->side == BLACK) ? WHITE : BLACK;
     board->doMove(opponentsMove, other);
-    cerr << side<< ", " << other << endl;
 
     /**
      * Make a move.
      */
 
-    cerr<<"Has moves "<<board->hasMoves(side)<<endl;
     if (board->hasMoves(side))
     {
         moves = get_possible_moves();
         final_move = choose_random_move(moves);
-        board->doMove(final_move, side);
+        board->doMove(final_move, this->side);
         return final_move;
     }
     return NULL;
@@ -78,12 +75,13 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 vector<Move> Player::get_possible_moves()
 {
     vector<Move> moves;
+
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
         {
             Move to_test(i, j);
-            if (board->checkMove(&to_test, side))
+            if (board->checkMove(&to_test, this->side))
             {
                 moves.push_back(to_test);
             }
