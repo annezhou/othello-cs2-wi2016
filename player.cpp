@@ -65,7 +65,6 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         moves = get_possible_moves(side);
         final_move = choose_random_move(moves);
         board->doMove(final_move, side);
-        delete moves;
         return final_move;
     }
     return NULL;
@@ -99,6 +98,7 @@ vector<Move> Player::get_possible_moves(Side side)
  */
 Move *Player::choose_random_move(vector<Move> moves)
 {
+    srand(time(NULL));
     int len = moves.size();
     int move_index = rand() % len;
     Move *move = &moves[move_index];
