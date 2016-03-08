@@ -46,8 +46,8 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * process the opponent's opponents move before calculating your own move
      */
 
-    vector<Move> *moves = new vector<Move>;
-    Move *final_move = new Move(0, 0);
+    vector<Move> moves;
+    Move *final_move;
 
     /**
      * Process opponent's move.
@@ -72,19 +72,19 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 /**
  * @brief Finds a vector of all possible moves for the side specified.
  */
-vector<Move> *Player::get_possible_moves(Side side)
+vector<Move> Player::get_possible_moves(Side side)
 {
-    vector<Move> *moves = new vector<Move>;
+    vector<Move> moves;
 
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
         {
-            Move to_test = Move(i, j);
+            Move to_test(i, j);
             if (board->checkMove(&to_test, side))
             {
                 cerr << side << to_test.getX() << ", " << to_test.getY() << endl;
-                moves->push_back(to_test);
+                moves.push_back(to_test);
             }
         }
     }
@@ -95,11 +95,11 @@ vector<Move> *Player::get_possible_moves(Side side)
 /**
  * @brief Chooses a random move from a vector of moves.
  */
-Move *Player::choose_random_move(vector<Move> *moves)
+Move *Player::choose_random_move(vector<Move> moves)
 {
-    int len = moves->size();
+    int len = moves.size();
     int move_index = rand() % len;
-    Move *move = &moves->at(move_index);
+    Move *move = &moves[move_index];
     return move;
 }
 
