@@ -8,6 +8,9 @@
 #include <time.h>
 #include "common.h"
 #include "board.h"
+#include <cstring>
+
+
 using namespace std;
 
 class Player {
@@ -21,6 +24,18 @@ public:
     Move *doMove(Move *opponentsMove, int msLeft);
     vector<Move> get_possible_moves();
     Move *choose_random_move(vector<Move> moves);
+
+    Move *choose_weighted_move(vector<Move> moves);
+
+    int weights[8][8];
+    /*{{3, -2, 2, 2, 2, 2, -2, 3},
+     {-2, -3, 1, 1, 1, 1, -3, -2},
+     {2, 1, 1, 1, 1, 1, 1, 2},
+     {2, 1, 1, 1, 1, 1, 1, 2},
+     {2, 1, 1, 1, 1, 1, 1, 2},
+     {2, 1, 1, 1, 1, 1, 1, 2},
+     {-2, -3, 1, 1, 1, 1, -3, -2},
+     {3, -2, 2, 2, 2, 2, -2, 3}};*/
 
     // Flag to tell if the player is running within the test_minimax context
     bool testingMinimax;

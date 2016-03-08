@@ -179,3 +179,23 @@ void Board::setBoard(char data[]) {
     }
 }
 
+/*
+ * Score of current board based on weights.
+ */
+int Board::score(Side side, int weights[8][8]) {
+    int sum = 0;
+    Side other = (side == BLACK) ? WHITE : BLACK;
+    for(int i = 0; i < 8; i++) {
+        for(int j = 0; j < 8; j++) {
+            if(get(side, i, j)) {
+                sum += weights[i][j];
+            }
+            else if(get(other, i, j)) {
+                sum -= weights[i][j];
+            }
+        }
+    }
+    return sum;
+}
+
+

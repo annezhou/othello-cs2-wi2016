@@ -12,11 +12,22 @@ Player::Player(Side side) {
     board = new Board();
 
     this->side = side;
-    
-    // set up weighted board
+    cerr<<(side==BLACK)<<endl;
+
+    /* initialize weights for board */
+    int temp[8][8] = 
+    {{3, -2, 2, 2, 2, 2, -2, 3},
+     {-2, -3, 1, 1, 1, 1, -3, -2},
+     {2, 1, 1, 1, 1, 1, 1, 2},
+     {2, 1, 1, 1, 1, 1, 1, 2},
+     {2, 1, 1, 1, 1, 1, 1, 2},
+     {2, 1, 1, 1, 1, 1, 1, 2},
+     {-2, -3, 1, 1, 1, 1, -3, -2},
+     {3, -2, 2, 2, 2, 2, -2, 3}};
+    memcpy(&weights, &temp, 64 * sizeof(int));
 
     /* 
-     * TODO: Do any initialization you need to do here (setting up the board,
+     * Do any initialization you need to do here (setting up the board,
      * precalculating things, etc.) However, remember that you will only have
      * 30 seconds.
      */
@@ -26,7 +37,7 @@ Player::Player(Side side) {
  * Destructor for the player.
  */
 Player::~Player() {
-    //delete board;
+    delete board;
 }
 
 /*
@@ -56,13 +67,27 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     board->doMove(opponentsMove, other);
 
     /**
-     * Make a move.
+     * Make a random move.
      */
 
-    if (board->hasMoves(side))
+    /*if (board->hasMoves(side))
     {
         moves = get_possible_moves();
         final_move = choose_random_move(moves);
+        board->doMove(final_move, this->side);
+        return final_move;
+    }
+    return NULL;
+    */
+
+    /**
+     * Make a move using heuristics
+     */
+    
+    if (board->hasMoves(side))
+    {
+        moves = get_possible_moves();
+        final_move = choose_weighted_move(moves);
         board->doMove(final_move, this->side);
         return final_move;
     }
@@ -102,5 +127,34 @@ Move *Player::choose_random_move(vector<Move> moves)
     Move temp = moves[move_index];
     Move *move = new Move(temp.getX(), temp.getY());
     return move;
+}
+
+/**
+ * @brief Chooses a weighted move from a vector of moves (heuristics).
+ */
+Move *Player::choose_weighted_move(vector<Move> moves)
+{
+    Move max_move = moves[0];
+    int score, max_score;
+    /* score all possible moves */
+    for(unsigned int i = 0; i < moves.size(); i++) {
+        /* copy board and make move */
+        Board * copy = board->copy();
+        copy->doMove(&moves[i], this->side);
+        score = copy->score(this->side, this->weights);
+
+        /* initialize max score as first move */
+        if(i == 0){
+            max_score = score;
+        }
+        else {
+            if(score > max_score){
+                max_score = score;
+                max_move = moves[i];
+            }
+        }
+        delete copy; 
+    }
+    return new Move(max_move.getX(), max_move.getY());
 }
 
