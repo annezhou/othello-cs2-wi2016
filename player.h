@@ -28,14 +28,6 @@ public:
     Move *choose_weighted_move(vector<Move> moves);
 
     int weights[8][8];
-    /*{{3, -2, 2, 2, 2, 2, -2, 3},
-     {-2, -3, 1, 1, 1, 1, -3, -2},
-     {2, 1, 1, 1, 1, 1, 1, 2},
-     {2, 1, 1, 1, 1, 1, 1, 2},
-     {2, 1, 1, 1, 1, 1, 1, 2},
-     {2, 1, 1, 1, 1, 1, 1, 2},
-     {-2, -3, 1, 1, 1, 1, -3, -2},
-     {3, -2, 2, 2, 2, 2, -2, 3}};*/
 
     // Flag to tell if the player is running within the test_minimax context
     bool testingMinimax;

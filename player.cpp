@@ -25,7 +25,6 @@ Player::Player(Side side) {
      {-2, -3, 1, 1, 1, 1, -3, -2},
      {3, -2, 2, 2, 2, 2, -2, 3}};
     memcpy(&weights, &temp, 64 * sizeof(int));
-
     /* 
      * Do any initialization you need to do here (setting up the board,
      * precalculating things, etc.) However, remember that you will only have
