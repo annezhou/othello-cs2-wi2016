@@ -43,7 +43,7 @@ Player::~Player() {
  */
 Move *Player::doMove(Move *opponentsMove, int msLeft) {
     /* 
-     * TODO: Implement how moves your AI should play here. You should first
+     * Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
 
@@ -66,7 +66,6 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     {
         moves = get_possible_moves();
         final_move = choose_random_move(moves);
-        cerr << side<<"move"<< final_move->getX() << ", " << final_move->getY() << endl;
         board->doMove(final_move, side);
         return final_move;
     }
@@ -86,7 +85,6 @@ vector<Move> Player::get_possible_moves()
             Move to_test(i, j);
             if (board->checkMove(&to_test, side))
             {
-                cerr << side <<" "<< to_test.getX() << ", " << to_test.getY() << endl;
                 moves.push_back(to_test);
             }
         }
@@ -105,7 +103,6 @@ Move *Player::choose_random_move(vector<Move> moves)
     int move_index = rand() % len;
     Move temp = moves[move_index];
     Move *move = new Move(temp.getX(), temp.getY());
-    cerr<<move->getX()<<" "<<move->getY()<<endl;
     return move;
 }
 
