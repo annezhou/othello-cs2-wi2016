@@ -18,7 +18,7 @@ public:
     
     Move *doMove(Move *opponentsMove, int msLeft);
     vector<Move> *get_possible_moves(Side side);
-    Move choose_random_move(vector<Move> *moves);
+    Move *choose_random_move(vector<Move> *moves);
 
     // Flag to tell if the player is running within the test_minimax context
     bool testingMinimax;

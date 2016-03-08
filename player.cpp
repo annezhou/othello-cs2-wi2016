@@ -46,21 +46,25 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * process the opponent's opponents move before calculating your own move
      */
 
-    vector<Move> *moves;
+    vector<Move> *moves = new vector<Move>;
+    Move *final_move = new Move(0, 0);
 
     /**
      * Process opponent's move.
      */
-
     Side other = (side == BLACK) ? WHITE : BLACK;
     board->doMove(opponentsMove, other);
+    cerr << side<< ", " << other << endl;
 
+    /**
+     * Make a move.
+     */
     if (board->hasMoves(side))
     {
         moves = get_possible_moves(side);
-        Move final_move = choose_random_move(moves);
-        board->doMove(&final_move, side);
-        return &final_move;
+        final_move = choose_random_move(moves);
+        board->doMove(final_move, side);
+        return final_move;
     }
     return NULL;
 }
@@ -70,7 +74,8 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
  */
 vector<Move> *Player::get_possible_moves(Side side)
 {
-    vector<Move> *moves;
+    vector<Move> *moves = new vector<Move>;
+
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
@@ -78,6 +83,7 @@ vector<Move> *Player::get_possible_moves(Side side)
             Move to_test = Move(i, j);
             if (board->checkMove(&to_test, side))
             {
+                cerr << side << to_test.getX() << ", " << to_test.getY() << endl;
                 moves->push_back(to_test);
             }
         }
@@ -89,11 +95,11 @@ vector<Move> *Player::get_possible_moves(Side side)
 /**
  * @brief Chooses a random move from a vector of moves.
  */
-Move Player::choose_random_move(vector<Move> *moves)
+Move *Player::choose_random_move(vector<Move> *moves)
 {
     int len = moves->size();
     int move_index = rand() % len;
-    Move move = moves->at(move_index);
+    Move *move = &moves->at(move_index);
     return move;
 }
 
