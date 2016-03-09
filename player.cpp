@@ -87,7 +87,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     if (board->hasMoves(side))
     {
         moves = get_possible_moves(this->side, this->board);
-        final_move = choose_minimax_move(moves);
+        final_move = choose_weighted_move(moves);
         board->doMove(final_move, this->side);
         return final_move;
     }
